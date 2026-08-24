@@ -1,0 +1,555 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Expense Tracker</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f5f7fb;
+    color:#1f2937;
+    overflow-x:hidden;
+}
+
+/* NAVBAR */
+
+nav{
+    height:75px;
+    width:100%;
+    background:rgba(255,255,255,.9);
+    backdrop-filter:blur(15px);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 8%;
+    position:sticky;
+    top:0;
+    z-index:100;
+    box-shadow:0 2px 20px rgba(0,0,0,.08);
+}
+
+.logo{
+    font-size:26px;
+    font-weight:bold;
+    color:#6c3df4;
+}
+
+.logo span{
+    color:#111827;
+}
+
+nav a{
+    text-decoration:none;
+    margin-left:25px;
+    color:#374151;
+    font-weight:600;
+}
+
+nav a:hover{
+    color:#6c3df4;
+}
+
+/* HERO */
+
+.hero{
+    width:88%;
+    margin:40px auto;
+    min-height:380px;
+    border-radius:30px;
+    background:linear-gradient(135deg,#5b2cff,#8b5cf6,#ec4899);
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    padding:55px;
+    color:white;
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    width:400px;
+    height:400px;
+    background:rgba(255,255,255,.12);
+    border-radius:50%;
+    right:-100px;
+    top:-100px;
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    width:250px;
+    height:250px;
+    background:rgba(255,255,255,.08);
+    border-radius:50%;
+    left:-80px;
+    bottom:-80px;
+}
+
+.hero-text{
+    width:52%;
+    z-index:2;
+    animation:slideLeft 1s ease;
+}
+
+.hero-text h1{
+    font-size:48px;
+    margin-bottom:18px;
+}
+
+.hero-text p{
+    font-size:18px;
+    line-height:1.7;
+    margin-bottom:28px;
+}
+
+.btn{
+    display:inline-block;
+    padding:15px 28px;
+    background:white;
+    color:#6c3df4;
+    border-radius:30px;
+    text-decoration:none;
+    font-weight:bold;
+    margin-right:12px;
+    transition:.3s;
+}
+
+.btn:hover{
+    transform:translateY(-4px) scale(1.03);
+    box-shadow:0 12px 25px rgba(0,0,0,.2);
+}
+
+.btn-outline{
+    border:2px solid white;
+    color:white;
+    background:transparent;
+}
+
+.hero-image{
+    width:48%;
+    z-index:2;
+    display:flex;
+    justify-content:center;
+    animation:float 4s ease-in-out infinite;
+}
+
+/* DASHBOARD */
+
+.dashboard{
+    width:88%;
+    margin:auto;
+}
+
+.heading{
+    font-size:28px;
+    margin-bottom:25px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:22px;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:22px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    transition:.35s;
+    position:relative;
+    overflow:hidden;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+}
+
+.card::before{
+    content:"";
+    position:absolute;
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:rgba(108,61,244,.08);
+    right:-20px;
+    top:-20px;
+}
+
+.icon-box{
+    width:55px;
+    height:55px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    margin-bottom:15px;
+    background:#ede9fe;
+}
+
+.card h3{
+    font-size:16px;
+    color:#6b7280;
+}
+
+.amount{
+    font-size:30px;
+    font-weight:bold;
+    margin-top:10px;
+    color:#111827;
+}
+
+.green{
+    color:#16a34a;
+}
+
+/* FEATURE */
+
+.feature{
+    margin:45px 0;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+}
+
+.feature-box{
+    background:white;
+    border-radius:25px;
+    padding:30px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.feature-box h2{
+    margin-bottom:15px;
+}
+
+.feature-box p{
+    color:#6b7280;
+    line-height:1.7;
+}
+
+/* ILLUSTRATION */
+
+.wallet{
+    width:310px;
+    height:230px;
+    position:relative;
+}
+
+.wallet-body{
+    width:250px;
+    height:160px;
+    background:#4f46e5;
+    border-radius:25px;
+    position:absolute;
+    bottom:15px;
+    left:25px;
+    box-shadow:0 20px 30px rgba(0,0,0,.25);
+}
+
+.wallet-flap{
+    width:150px;
+    height:130px;
+    background:#7c3aed;
+    position:absolute;
+    right:0;
+    top:20px;
+    border-radius:20px;
+    transform:rotate(8deg);
+}
+
+.coin{
+    width:65px;
+    height:65px;
+    border-radius:50%;
+    background:linear-gradient(#ffd54f,#f59e0b);
+    position:absolute;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    font-weight:bold;
+    color:white;
+    box-shadow:0 8px 15px rgba(0,0,0,.2);
+}
+
+.coin1{
+    left:10px;
+    top:25px;
+}
+
+.coin2{
+    left:75px;
+    top:5px;
+}
+
+.coin3{
+    left:150px;
+    top:30px;
+}
+
+/* FOOTER */
+
+footer{
+    margin-top:60px;
+    background:#111827;
+    color:#d1d5db;
+    text-align:center;
+    padding:25px;
+}
+
+/* FLOATING BUTTON */
+
+.float{
+    position:fixed;
+    right:30px;
+    bottom:30px;
+    width:65px;
+    height:65px;
+    border-radius:50%;
+    background:#6c3df4;
+    color:white;
+    font-size:32px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    box-shadow:0 12px 25px rgba(108,61,244,.4);
+    animation:pulse 2s infinite;
+}
+
+/* ANIMATIONS */
+
+@keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-18px);}
+}
+
+@keyframes slideLeft{
+    from{
+        opacity:0;
+        transform:translateX(-50px);
+    }
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}
+
+@keyframes pulse{
+    0%{
+        box-shadow:0 0 0 0 rgba(108,61,244,.5);
+    }
+    70%{
+        box-shadow:0 0 0 18px rgba(108,61,244,0);
+    }
+    100%{
+        box-shadow:0 0 0 0 rgba(108,61,244,0);
+    }
+}
+
+@media(max-width:800px){
+
+.hero{
+    flex-direction:column;
+    text-align:center;
+}
+
+.hero-text,.hero-image{
+    width:100%;
+}
+
+.hero-text h1{
+    font-size:36px;
+}
+
+.feature{
+    grid-template-columns:1fr;
+}
+
+nav{
+    padding:0 20px;
+}
+
+nav a{
+    margin-left:10px;
+    font-size:14px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+
+<div class="logo">💳 Expense <span>Tracker</span></div>
+
+<div>
+<a href="/">Dashboard</a>
+<a href="/add-expense">Add Expense</a>
+<a href="/expenses">Expenses</a>
+</div>
+
+</nav>
+
+<section class="hero">
+
+<div class="hero-text">
+
+<p style="font-size:20px;">👋 Welcome Back!</p>
+
+<h1>Track Your Expenses<br>Build Better Financial Habits</h1>
+
+<p>
+Manage your daily spending, monitor transactions,
+and take complete control of your money with a smart
+personal expense dashboard.
+</p>
+
+<a href="/add-expense" class="btn">+ Add Expense</a>
+
+<a href="/expenses" class="btn btn-outline">View Expenses</a>
+
+</div>
+
+<div class="hero-image">
+
+<div class="wallet">
+
+<div class="coin coin1">₹</div>
+<div class="coin coin2">₹</div>
+<div class="coin coin3">₹</div>
+
+<div class="wallet-flap"></div>
+<div class="wallet-body"></div>
+
+</div>
+
+</div>
+
+</section>
+
+<div class="dashboard">
+
+<h2 class="heading">Financial Overview 📊</h2>
+
+<div class="cards">
+
+<div class="card">
+
+<div class="icon-box">💰</div>
+
+<h3>Total Expenses</h3>
+
+<div class="amount">
+₹<span th:text="${total}">0</span>
+</div>
+
+<p class="green">Updated Live</p>
+
+</div>
+
+<div class="card">
+
+<div class="icon-box">🧾</div>
+
+<h3>Total Transactions</h3>
+
+<div class="amount" th:text="${count}">0</div>
+
+<p class="green">All Records</p>
+
+</div>
+
+<div class="card">
+
+<div class="icon-box">📈</div>
+
+<h3>Smart Tracking</h3>
+
+<div class="amount">100%</div>
+
+<p class="green">Expense Monitoring</p>
+
+</div>
+
+<div class="card">
+
+<div class="icon-box">🎯</div>
+
+<h3>Goal</h3>
+
+<div class="amount">Save</div>
+
+<p class="green">Spend Wisely</p>
+
+</div>
+
+</div>
+
+<div class="feature">
+
+<div class="feature-box">
+
+<h2>Why Track Expenses? 💡</h2>
+
+<p>
+Tracking expenses helps you understand where your money goes.
+You can reduce unnecessary spending, improve budgeting,
+and achieve your financial goals faster.
+</p>
+
+<br>
+
+<h3>✔ Better Budget</h3>
+<h3>✔ Smart Decisions</h3>
+<h3>✔ Financial Discipline</h3>
+
+</div>
+
+<div class="feature-box" style="background:linear-gradient(135deg,#312e81,#7c3aed);color:white;">
+
+<h2>Small Savings Create Big Freedom ✨</h2>
+
+<p style="color:#e9d5ff;">
+Every rupee you save today becomes an opportunity tomorrow.
+Stay consistent and build a stronger financial future.
+</p>
+
+<div style="font-size:70px;text-align:center;margin-top:20px;">
+🏆
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<a href="/add-expense" class="float">+</a>
+
+<footer>
+
+© 2026 Expense Tracker | Designed by Ankit Kumar Singh
+<br>
+Amity University Jharkhand
+
+</footer>
+
+</body>
+</html>

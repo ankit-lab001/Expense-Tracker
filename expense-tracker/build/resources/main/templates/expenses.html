@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Expenses</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+margin:0;
+background:#f3f4f6;
+color:#1f2937;
+}
+
+nav{
+background:#111827;
+padding:18px 8%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+color:white;
+}
+
+nav h2{
+margin:0;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin-left:20px;
+font-weight:bold;
+}
+
+.container{
+width:90%;
+margin:35px auto;
+}
+
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+}
+
+.total-card{
+background:linear-gradient(135deg,#6d28d9,#9333ea);
+color:white;
+padding:20px 30px;
+border-radius:18px;
+box-shadow:0 12px 25px rgba(109,40,217,.25);
+}
+
+.add{
+padding:14px 22px;
+background:#10b981;
+color:white;
+text-decoration:none;
+border-radius:25px;
+font-weight:bold;
+transition:.3s;
+}
+
+.add:hover{
+transform:translateY(-3px);
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+border-radius:18px;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+th{
+background:#6d28d9;
+color:white;
+padding:18px;
+}
+
+td{
+padding:16px;
+text-align:center;
+border-bottom:1px solid #e5e7eb;
+}
+
+tr{
+transition:.25s;
+}
+
+tbody tr:hover{
+background:#faf5ff;
+transform:scale(1.005);
+}
+
+.badge{
+padding:7px 13px;
+border-radius:20px;
+font-size:13px;
+font-weight:bold;
+background:#ede9fe;
+color:#6d28d9;
+}
+
+.edit{
+text-decoration:none;
+padding:9px 13px;
+border-radius:10px;
+background:#dbeafe;
+color:#2563eb;
+font-weight:bold;
+}
+
+.delete{
+text-decoration:none;
+padding:9px 13px;
+border-radius:10px;
+background:#fee2e2;
+color:#dc2626;
+font-weight:bold;
+margin-left:8px;
+}
+
+.empty{
+padding:30px;
+font-size:18px;
+color:#6b7280;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+
+<h2>💳 Expense Tracker</h2>
+
+<div>
+<a href="/">Dashboard</a>
+<a href="/add-expense">Add Expense</a>
+</div>
+
+</nav>
+
+<div class="container">
+
+<div class="top">
+
+<div>
+<h1>My Expenses 📊</h1>
+<p>Track every transaction beautifully.</p>
+</div>
+
+<div class="total-card">
+<h3>Total Spending</h3>
+<h1>₹<span th:text="${total}">0</span></h1>
+</div>
+
+</div>
+
+<a href="/add-expense" class="add">＋ Add New Expense</a>
+
+<br><br>
+
+<table>
+
+<thead>
+
+<tr>
+<th>ID</th>
+<th>Description</th>
+<th>Category</th>
+<th>Amount</th>
+<th>Date</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr th:each="expense : ${expenses}">
+
+<td th:text="${expense.id}"></td>
+
+<td style="font-weight:bold;" th:text="${expense.description}"></td>
+
+<td>
+<span class="badge" th:text="${expense.category}"></span>
+</td>
+
+<td style="font-weight:bold;color:#16a34a;">
+₹<span th:text="${expense.amount}"></span>
+</td>
+
+<td th:text="${expense.date}"></td>
+
+<td>
+
+<a class="edit"
+th:href="@{/edit/{id}(id=${expense.id})}">
+✏ Edit
+</a>
+
+<a class="delete"
+th:href="@{/delete/{id}(id=${expense.id})}"
+onclick="return confirm('Delete this expense?')">
+🗑 Delete
+</a>
+
+</td>
+
+</tr>
+
+<tr th:if="${#lists.isEmpty(expenses)}">
+<td colspan="6" class="empty">
+No expenses added yet 💸
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</body>
+</html>
